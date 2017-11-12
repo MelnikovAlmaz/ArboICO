@@ -143,19 +143,19 @@ contract ATCTokenSale is Controller, SafeMath {
 
     // @notice Get what the price is for a given stage
     // @param _stage: Stage number
-    // @return Price in wei for that stage.
+    // @return Price in ether for that stage.
     // If sale stage doesn't exist, returns 0.
     function priceForStage(uint8 _stage) constant internal returns (uint256) {
         if (_stage >= priceStages) return 0;
         uint _price = 0;
         if(_stage == 1){
-            _price = 83330000000000000;
+            _price = 0.08333 ether;
         }
         if(_stage == 2){
-            _price = 89285714000000000;
+            _price = 0.089285714 ether;
         }
         if(_stage == 3){
-            _price = 94339623000000000;
+            _price = 0.094339623 ether;
         }
         if(_stage == 4){
             _price = 0.1 ether;
