@@ -12,6 +12,7 @@ contract AbstractSale {
 contract SaleWallet {
     // Public variables
     address public multisig;
+    address creator;
     uint public finalBlock;
     AbstractSale public tokenSale;
 
@@ -22,6 +23,7 @@ contract SaleWallet {
         multisig = _multisig;
         finalBlock = _finalBlock;
         tokenSale = AbstractSale(_tokenSale);
+        creator = msg.sender;
     }
 
     // @dev Receive all sent funds without any further logic
@@ -29,7 +31,7 @@ contract SaleWallet {
 
     // @dev Withdraw function sends all the funds to the wallet if conditions are correct
     function withdraw() public {
-        if (msg.sender != multisig) revert();                       // Only the multisig can request it
+        if (msg.sender != creator) revert();                       // Only the creator can request it
         if (block.number > finalBlock) return doWithdraw();      // Allow after the final block
         if (tokenSale.saleFinalized()) return doWithdraw();      // Allow when sale is finalized
     }
