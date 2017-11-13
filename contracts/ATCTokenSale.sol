@@ -17,20 +17,20 @@ contract ATCTokenSale is Controller, SafeMath {
     uint public finalBlock;               // Block number in which the sale end. Exclusive, sale will be closed at ends block.
     address public aragonDevMultisig;     // The address to hold the funds donated
     uint8 priceStages;
-    address public creator;
+    address private creator;
 
     uint public totalCollected = 0;               // In wei
-    uint public presaleToken = 0;                 // Amount of tokens generated while pre-sale
+    uint private presaleToken = 0;                 // Amount of tokens generated while pre-sale
     bool public saleStopped = false;              // Has Aragon Dev stopped the sale?
     bool public saleFinalized = false;            // Has Aragon Dev finalized the sale?
 
     mapping (address => bool) public activated;   // Address confirmates that wants to activate the sale
 
     ATC public token;                             // The token
-    SaleWallet public saleWallet;                    // Wallet that receives all sale funds
+    SaleWallet private saleWallet;                    // Wallet that receives all sale funds
 
-    uint constant public dust = 1 finney;         // Minimum investment
-    uint public hardCap = 1000000 ether;          // Hard cap to protect the ETH network from a really high raise
+    uint constant private dust = 1 finney;         // Minimum investment
+    uint private hardCap = 1000000 ether;          // Hard cap to protect the ETH network from a really high raise
 
     event NewPresaleAllocation(address indexed holder, uint256 antAmount);
     event NewBuyer(address indexed holder, uint256 antAmount, uint256 etherAmount);
@@ -107,6 +107,13 @@ contract ATCTokenSale is Controller, SafeMath {
         return activated[this] && activated[creator];
     }
 
+    // @notice Method shows only balance of caller
+    // @return Number of tokens in wallet
+
+    function getBalance() constant public returns (uint256){
+        return token.balanceOf(msg.sender)
+    }
+
     // @notice Get the price for a ANT token at any given block number
     // @param _blockNumber the block for which the price is requested
     // @return Number of wei-ANT for 1 wei
@@ -143,19 +150,19 @@ contract ATCTokenSale is Controller, SafeMath {
 
     // @notice Get what the price is for a given stage
     // @param _stage: Stage number
-    // @return Price in wei for that stage.
+    // @return Price in ether for that stage.
     // If sale stage doesn't exist, returns 0.
     function priceForStage(uint8 _stage) constant internal returns (uint256) {
         if (_stage >= priceStages) return 0;
         uint _price = 0;
         if(_stage == 1){
-            _price = 83330000000000000;
+            _price = 0.08333 ether;
         }
         if(_stage == 2){
-            _price = 89285714000000000;
+            _price = 0.089285714 ether;
         }
         if(_stage == 3){
-            _price = 94339623000000000;
+            _price = 0.094339623 ether;
         }
         if(_stage == 4){
             _price = 0.1 ether;
@@ -188,7 +195,7 @@ contract ATCTokenSale is Controller, SafeMath {
     /// `_owner`. Payable is a required solidity modifier for functions to receive
     /// ether, without this modifier functions will throw if ether is sent to them
 
-    function () public payable {
+    function invest() public payable {
         return doPayment(msg.sender);
     }
 
