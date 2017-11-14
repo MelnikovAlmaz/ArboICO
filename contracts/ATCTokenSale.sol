@@ -107,11 +107,11 @@ contract ATCTokenSale is Controller, SafeMath {
         return activated[this] && activated[creator];
     }
 
-    // @notice Method shows only balance of caller
+    // @notice Method shows balance of passed address
     // @return Number of tokens in wallet
 
-    function getBalance() constant public returns (uint256){
-        return token.balanceOf(msg.sender)
+    function getBalance(address _owner) constant public returns (uint256){
+        return token.balanceOf(_owner);
     }
 
     // @notice Get the price for a ANT token at any given block number
