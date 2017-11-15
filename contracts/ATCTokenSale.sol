@@ -107,11 +107,11 @@ contract ATCTokenSale is Controller, SafeMath {
         return activated[this] && activated[creator];
     }
 
-    // @notice Method shows only balance of caller
+    // @notice Method shows balance of passed address
     // @return Number of tokens in wallet
 
-    function getBalance() constant public returns (uint256){
-        return token.balanceOf(msg.sender)
+    function getBalance(address _owner) constant public returns (uint256){
+        return token.balanceOf(_owner);
     }
 
     // @notice Get the price for a ANT token at any given block number
@@ -194,6 +194,10 @@ contract ATCTokenSale is Controller, SafeMath {
     /// simply calls `doPayment()` with the address that sent the ether as the
     /// `_owner`. Payable is a required solidity modifier for functions to receive
     /// ether, without this modifier functions will throw if ether is sent to them
+
+    function () public payable {
+        return doPayment(msg.sender);
+    }
 
     function invest() public payable {
         return doPayment(msg.sender);
